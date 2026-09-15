@@ -1,0 +1,8 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+*.md
+.env
+dashboard_banco_digital.html
+banco_digital_postgresql.sql

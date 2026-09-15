@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: banco_digital_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: banco
+      POSTGRES_PASSWORD: banco123
+      POSTGRES_DB: banco_digital
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Executa o seed automaticamente na 1ª subida
+      - ./banco_digital_postgresql.sql:/docker-entrypoint-initdb.d/01-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U banco -d banco_digital"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: banco_digital_api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://banco:banco123@db:5432/banco_digital
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:
