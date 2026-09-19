@@ -1,0 +1,825 @@
+<div id="bank-dashboard">
+  <style>
+    #bank-dashboard {
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #ece9f7;
+      max-width: 1180px;
+      margin: auto;
+      padding: 24px;
+      background:
+        radial-gradient(900px 500px at 12% -10%, #3b1d6e66, transparent 60%),
+        radial-gradient(800px 500px at 100% 0%, #7a1d5a4d, transparent 55%),
+        #0d0a17;
+      color-scheme: dark;
+    }
+
+    #bank-dashboard * {
+      box-sizing: border-box;
+    }
+
+    #bank-dashboard h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #c4b5fd, #a855f7 45%, #ec4899);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    #bank-dashboard h2 {
+      font-size: 17px;
+      margin: 0 0 14px;
+      color: #ded7f5;
+    }
+
+    #bank-dashboard p {
+      margin: 6px 0;
+      color: #a99fc4;
+      font-size: 14px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+
+    .badge {
+      background: linear-gradient(135deg, #8b5cf633, #ec489933);
+      color: #f0abfc;
+      border: 1px solid #a855f759;
+      padding: 7px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 0 22px #a855f72e;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto;
+      gap: 12px;
+      background: linear-gradient(160deg, #1c1533, #151027);
+      border: 1px solid #2c2148;
+      padding: 16px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px #00000059;
+    }
+
+    .filters label {
+      font-size: 12px;
+      color: #b3a8d4;
+      font-weight: 650;
+      display: grid;
+      gap: 5px;
+    }
+
+    .filters select,
+    .filters input,
+    .filters button {
+      border: 1px solid #362a56;
+      border-radius: 8px;
+      background: #1e1836;
+      color: #ece9f7;
+      padding: 9px;
+      font: inherit;
+      color-scheme: dark;
+    }
+
+    .filters select:focus,
+    .filters input:focus {
+      outline: none;
+      border-color: #a855f7;
+      box-shadow: 0 0 0 3px #a855f733;
+    }
+
+    .filters button {
+      align-self: end;
+      background: linear-gradient(120deg, #7c3aed, #a855f7 50%, #ec4899);
+      color: #fff;
+      border: 0;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 6px 18px #a855f740;
+      transition: filter 0.15s ease, transform 0.15s ease;
+    }
+
+    .filters button:hover {
+      filter: brightness(1.12);
+      transform: translateY(-1px);
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .kpi {
+      background: linear-gradient(160deg, #1d1636, #151027);
+      border: 1px solid #2c2148;
+      padding: 17px;
+      border-radius: 14px;
+      box-shadow: 0 10px 26px #0000004d;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 2px;
+      background: linear-gradient(90deg, #8b5cf6, #d946ef, #ec4899);
+      opacity: 0.9;
+    }
+
+    .kpi small {
+      color: #a99fc4;
+      display: block;
+      margin-bottom: 9px;
+    }
+
+    .kpi strong {
+      font-size: 22px;
+      letter-spacing: -0.4px;
+      background: linear-gradient(90deg, #ddd6fe, #e9d5ff 50%, #fbcfe8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .kpi span {
+      font-size: 12px;
+      color: #e879f9;
+      font-weight: 650;
+      display: block;
+      margin-top: 7px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.18fr 0.82fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .panel {
+      background: linear-gradient(160deg, #1b1433, #151027);
+      border: 1px solid #2c2148;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 10px 26px #0000004d;
+      min-width: 0;
+    }
+
+    .chart {
+      width: 100%;
+      height: 260px;
+    }
+
+    .bars {
+      display: grid;
+      gap: 11px;
+    }
+
+    .barrow {
+      display: grid;
+      grid-template-columns: 78px 1fr 78px;
+      gap: 9px;
+      align-items: center;
+      font-size: 13px;
+      color: #cfc7e8;
+    }
+
+    .track {
+      height: 10px;
+      background: #2a2144;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #8b5cf6, #a855f7 45%, #ec4899);
+      box-shadow: 0 0 14px #a855f766;
+    }
+
+    .barrow b {
+      text-align: right;
+      font-size: 12px;
+      color: #f0abfc;
+    }
+
+    .note {
+      font-size: 12px !important;
+      color: #8b81ab !important;
+      margin-top: 12px !important;
+    }
+
+    .tablewrap {
+      overflow: auto;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .table th {
+      color: #a99fc4;
+      text-align: left;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0 8px 9px;
+    }
+
+    .table td {
+      padding: 10px 8px;
+      border-top: 1px solid #271e42;
+      color: #e3ddf5;
+    }
+
+    .table tbody tr:hover td {
+      background: #a855f714;
+    }
+
+    .table td:last-child,
+    .table th:last-child {
+      text-align: right;
+      color: #f0abfc;
+    }
+
+    .empty {
+      color: #8b81ab;
+      text-align: center;
+      padding: 28px;
+    }
+
+    @media (max-width: 850px) {
+      .kpis {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .filters {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .top {
+        display: block;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      #bank-dashboard {
+        padding: 14px;
+      }
+
+      .kpis,
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .chart {
+        height: 230px;
+      }
+    }
+  </style>
+
+  <div class="top">
+    <div>
+      <h1>Dashboard de Clientes — Banco Digital</h1>
+      <p>Visão de transações, perfil da base e concentração regional.</p>
+    </div>
+    <div class="badge">Base demonstrativa: 2.400 transações</div>
+  </div>
+
+  <div class="filters">
+    <label>
+      UF
+      <select id="uf">
+        <option value="Todos">Todas as UFs</option>
+      </select>
+    </label>
+
+    <label>
+      Cidade
+      <select id="city">
+        <option value="Todos">Todas as cidades</option>
+      </select>
+    </label>
+
+    <label>
+      Tipo de transação
+      <select id="type">
+        <option value="Todos">Todos os tipos</option>
+      </select>
+    </label>
+
+    <label>
+      Mês (opcional)
+      <input id="period" type="month" min="2026-01" max="2026-09">
+    </label>
+
+    <button id="clear" type="button">Limpar filtros</button>
+  </div>
+
+  <section class="kpis">
+    <div class="kpi">
+      <small>Clientes ativos</small>
+      <strong id="clients">—</strong>
+      <span id="clientsSub">—</span>
+    </div>
+
+    <div class="kpi">
+      <small>Transações</small>
+      <strong id="txs">—</strong>
+      <span id="txsSub">—</span>
+    </div>
+
+    <div class="kpi">
+      <small>Volume transacionado</small>
+      <strong id="volume">—</strong>
+      <span id="volumeSub">—</span>
+    </div>
+
+    <div class="kpi">
+      <small>Ticket médio</small>
+      <strong id="ticket">—</strong>
+      <span id="ticketSub">—</span>
+    </div>
+
+    <div class="kpi">
+      <small>Taxa de aprovação</small>
+      <strong id="approval">—</strong>
+      <span id="approvalSub">—</span>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="panel">
+      <h2>Volume transacionado por dia</h2>
+      <svg
+        id="line"
+        class="chart"
+        role="img"
+        aria-label="Gráfico de volume diário"
+      ></svg>
+      <p class="note">
+        A linha mostra somente transações aprovadas no período selecionado.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h2>Volume por tipo de transação</h2>
+      <div id="typeBars" class="bars"></div>
+      <p class="note">Valores calculados sobre a seleção atual.</p>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="panel">
+      <h2>Estados com maior volume</h2>
+      <div id="stateBars" class="bars"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Perfil da base</h2>
+      <div id="profileBars" class="bars"></div>
+      <p class="note">
+        Faixas por idade dos clientes que movimentaram a conta.
+      </p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Clientes de maior valor no recorte</h2>
+
+    <div class="tablewrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Cidade / UF</th>
+            <th>Transações</th>
+            <th>Volume aprovado</th>
+          </tr>
+        </thead>
+        <tbody id="ranking"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <script>
+    (() => {
+      const cities = [
+        ["SP", "São Paulo"],
+        ["SP", "Campinas"],
+        ["RJ", "Rio de Janeiro"],
+        ["MG", "Belo Horizonte"],
+        ["PR", "Curitiba"],
+        ["RS", "Porto Alegre"],
+        ["BA", "Salvador"],
+        ["PE", "Recife"],
+        ["CE", "Fortaleza"],
+        ["GO", "Goiânia"]
+      ];
+
+      const types = ["PIX", "Cartão", "Transferência", "Boleto"];
+
+      let seed = 74219;
+
+      const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+
+      const money = (value) =>
+        value.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+          maximumFractionDigits: 0
+        });
+
+      const formatNumber = (value) => value.toLocaleString("pt-BR");
+
+      const records = [];
+
+      for (let i = 0; i < 2400; i++) {
+        const city = cities[Math.floor(rnd() * cities.length)];
+
+        const date = new Date(
+          Date.UTC(2026, 0, 1) + Math.floor(rnd() * 256) * 86400000
+        );
+
+        const type = types[Math.floor(rnd() * types.length)];
+        const approved = rnd() > 0.075;
+
+        const amount = Math.round(
+          (
+            type === "PIX"
+              ? 35 + rnd() * 920
+              : type === "Cartão"
+                ? 20 + rnd() * 1400
+                : type === "Transferência"
+                  ? 150 + rnd() * 4800
+                  : 50 + rnd() * 2100
+          ) * 100
+        ) / 100;
+
+        records.push({
+          id: `CL${String(1001 + Math.floor(rnd() * 600)).padStart(4, "0")}`,
+          name: `Cliente ${String(1 + Math.floor(rnd() * 600)).padStart(3, "0")}`,
+          uf: city[0],
+          city: city[1],
+          date: date.toISOString().slice(0, 10),
+          type,
+          approved,
+          amount,
+          age: 18 + Math.floor(rnd() * 55)
+        });
+      }
+
+      const getElement = (id) => document.getElementById(id);
+
+      function addOptions(id, values) {
+        const element = getElement(id);
+
+        [...new Set(values)]
+          .sort()
+          .forEach((value) => {
+            element.insertAdjacentHTML(
+              "beforeend",
+              `<option value="${value}">${value}</option>`
+            );
+          });
+      }
+
+      function updateCities() {
+        const selectedUf = getElement("uf").value;
+        const currentCity = getElement("city").value;
+        const cityElement = getElement("city");
+
+        cityElement.innerHTML =
+          '<option value="Todos">Todas as cidades</option>';
+
+        addOptions(
+          "city",
+          records
+            .filter(
+              (record) => selectedUf === "Todos" || record.uf === selectedUf
+            )
+            .map((record) => record.city)
+        );
+
+        cityElement.value = [...cityElement.options].some(
+          (option) => option.value === currentCity
+        )
+          ? currentCity
+          : "Todos";
+      }
+
+      function grouped(data, field, calculateValue) {
+        const result = {};
+
+        data.forEach((record) => {
+          result[record[field]] =
+            (result[record[field]] || 0) + calculateValue(record);
+        });
+
+        return Object.entries(result)
+          .map(([key, value]) => ({ key, value }))
+          .sort((a, b) => b.value - a.value);
+      }
+
+      function renderBars(id, items, formatter = money) {
+        const maxValue = Math.max(...items.map((item) => item.value), 1);
+
+        getElement(id).innerHTML = items.length
+          ? items
+              .map(
+                (item) => `
+                  <div class="barrow">
+                    <span>${item.key}</span>
+                    <div class="track">
+                      <div
+                        class="fill"
+                        style="width: ${(item.value / maxValue) * 100}%"
+                      ></div>
+                    </div>
+                    <b>${formatter(item.value)}</b>
+                  </div>
+                `
+              )
+              .join("")
+          : '<div class="empty">Sem dados no recorte.</div>';
+      }
+
+      function drawLine(values) {
+        const svg = getElement("line");
+        const width = svg.clientWidth || 600;
+        const height = 260;
+        const padding = 34;
+        const maxValue = Math.max(...values.map((item) => item.value), 1);
+
+        const coords = values.map((item, index) => {
+          const x = padding + (index * (width - padding * 2)) / 30;
+          const y =
+            height -
+            padding -
+            (item.value / maxValue) * (height - padding * 2);
+
+          return { x, y };
+        });
+
+        const points = coords.map(({ x, y }) => `${x},${y}`).join(" ");
+
+        const area = [
+          `${padding},${height - padding}`,
+          points,
+          `${width - padding},${height - padding}`
+        ].join(" ");
+
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+
+        svg.innerHTML = `
+          <defs>
+            <linearGradient id="lineStroke" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#8b5cf6" />
+              <stop offset="55%" stop-color="#a855f7" />
+              <stop offset="100%" stop-color="#ec4899" />
+            </linearGradient>
+
+            <linearGradient id="lineFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a855f7" stop-opacity="0.38" />
+              <stop offset="100%" stop-color="#ec4899" stop-opacity="0" />
+            </linearGradient>
+          </defs>
+
+          <line
+            x1="${padding}"
+            y1="${height - padding}"
+            x2="${width - padding}"
+            y2="${height - padding}"
+            stroke="#3a2e5c"
+          />
+
+          <line
+            x1="${padding}"
+            y1="${padding}"
+            x2="${padding}"
+            y2="${height - padding}"
+            stroke="#3a2e5c"
+          />
+
+          <polygon points="${area}" fill="url(#lineFill)" />
+
+          <text x="${padding}" y="18" fill="#a99fc4" font-size="11">
+            ${money(maxValue)}
+          </text>
+
+          <text x="${padding}" y="${height - 10}" fill="#a99fc4" font-size="11">
+            1
+          </text>
+
+          <text
+            x="${width - padding - 10}"
+            y="${height - 10}"
+            fill="#a99fc4"
+            font-size="11"
+          >
+            31
+          </text>
+
+          <polyline
+            points="${points}"
+            fill="none"
+            stroke="url(#lineStroke)"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        `;
+      }
+
+      function render() {
+        const selectedUf = getElement("uf").value;
+        const selectedCity = getElement("city").value;
+        const selectedType = getElement("type").value;
+        const selectedPeriod = getElement("period").value;
+
+        const data = records.filter(
+          (record) =>
+            (selectedUf === "Todos" || record.uf === selectedUf) &&
+            (selectedCity === "Todos" || record.city === selectedCity) &&
+            (selectedType === "Todos" || record.type === selectedType) &&
+            record.date.startsWith(selectedPeriod)
+        );
+
+        const approvedTransactions = data.filter(
+          (record) => record.approved
+        );
+
+        const totalVolume = approvedTransactions.reduce(
+          (total, record) => total + record.amount,
+          0
+        );
+
+        const activeClients = new Set(
+          data.map((record) => record.id)
+        ).size;
+
+        const approvalRate = data.length
+          ? approvedTransactions.length / data.length
+          : 0;
+
+        getElement("clients").textContent = formatNumber(activeClients);
+        getElement("clientsSub").textContent = "clientes no período";
+
+        getElement("txs").textContent = formatNumber(data.length);
+        getElement("txsSub").textContent =
+          `${formatNumber(approvedTransactions.length)} aprovadas`;
+
+        getElement("volume").textContent = money(totalVolume);
+        getElement("volumeSub").textContent = "somente aprovadas";
+
+        getElement("ticket").textContent = money(
+          approvedTransactions.length
+            ? totalVolume / approvedTransactions.length
+            : 0
+        );
+
+        getElement("ticketSub").textContent =
+          "por transação aprovada";
+
+        getElement("approval").textContent =
+          `${(approvalRate * 100).toFixed(1)}%`;
+
+        getElement("approvalSub").textContent =
+          `${formatNumber(data.length - approvedTransactions.length)} recusadas`;
+
+        renderBars(
+          "typeBars",
+          grouped(approvedTransactions, "type", (record) => record.amount)
+        );
+
+        renderBars(
+          "stateBars",
+          grouped(approvedTransactions, "uf", (record) => record.amount).slice(0, 6)
+        );
+
+        const ageGroups = [
+          ["18–24", 0],
+          ["25–34", 0],
+          ["35–44", 0],
+          ["45–54", 0],
+          ["55+", 0]
+        ];
+
+        approvedTransactions.forEach((record) => {
+          const index =
+            record.age < 25
+              ? 0
+              : record.age < 35
+                ? 1
+                : record.age < 45
+                  ? 2
+                  : record.age < 55
+                    ? 3
+                    : 4;
+
+          ageGroups[index][1]++;
+        });
+
+        renderBars(
+          "profileBars",
+          ageGroups.map(([key, value]) => ({ key, value })),
+          formatNumber
+        );
+
+        const dailySeries = Array.from({ length: 31 }, (_, index) => ({
+          day: index + 1,
+          value: approvedTransactions
+            .filter(
+              (record) => Number(record.date.slice(-2)) === index + 1
+            )
+            .reduce((total, record) => total + record.amount, 0)
+        }));
+
+        drawLine(dailySeries);
+
+        const clientRanking = {};
+
+        approvedTransactions.forEach((record) => {
+          const client = clientRanking[record.id] || {
+            ...record,
+            transactions: 0,
+            volume: 0
+          };
+
+          client.transactions++;
+          client.volume += record.amount;
+
+          clientRanking[record.id] = client;
+        });
+
+        getElement("ranking").innerHTML =
+          Object.values(clientRanking)
+            .sort((a, b) => b.volume - a.volume)
+            .slice(0, 8)
+            .map(
+              (client) => `
+                <tr>
+                  <td>${client.name}</td>
+                  <td>${client.city} / ${client.uf}</td>
+                  <td>${formatNumber(client.transactions)}</td>
+                  <td>${money(client.volume)}</td>
+                </tr>
+              `
+            )
+            .join("") ||
+          '<tr><td colspan="4" class="empty">Sem dados no recorte.</td></tr>';
+      }
+
+      addOptions("uf", records.map((record) => record.uf));
+      addOptions("type", types);
+
+      getElement("uf").onchange = () => {
+        updateCities();
+        render();
+      };
+
+      ["city", "type", "period"].forEach((id) => {
+        getElement(id).onchange = render;
+      });
+
+      getElement("clear").onclick = () => {
+        getElement("uf").value = "Todos";
+        updateCities();
+        getElement("type").value = "Todos";
+        getElement("period").value = "";
+        render();
+      };
+
+      updateCities();
+      render();
+
+      addEventListener("resize", render);
+    })();
+  </script>
+</div>
