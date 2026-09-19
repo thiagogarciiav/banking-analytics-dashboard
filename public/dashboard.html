@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard — Banco Digital</title>
+  <link rel="stylesheet" href="/style_dashboard.css" />
+</head>
+<body>
+<div id="bank-dashboard">
+  <header class="top">
+    <div>
+      <h1>Dashboard Banco Digital</h1>
+      <p>Clientes e transações — base demonstrativa de 2026</p>
+    </div>
+    <div class="badge" id="badge">Carregando…</div>
+  </header>
+
+  <form class="filters" id="filters">
+    <label for="uf">UF
+      <select id="uf" name="uf"><option value="">Todas</option></select>
+    </label>
+    <label for="cidade">Cidade
+      <select id="cidade" name="cidade"><option value="">Todas</option></select>
+    </label>
+    <label for="tipo">Tipo
+      <select id="tipo" name="tipo">
+        <option value="">Todos</option>
+        <option value="PIX">PIX</option>
+        <option value="Cartão">Cartão</option>
+        <option value="Transferência">Transferência</option>
+        <option value="Boleto">Boleto</option>
+      </select>
+    </label>
+    <label for="mes">Mês
+      <input type="month" id="mes" name="mes" />
+    </label>
+    <button type="submit">Aplicar</button>
+  </form>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="grid">
+    <div class="panel">
+      <h2>Volume aprovado por dia</h2>
+      <canvas class="chart" id="chart"></canvas>
+      <p class="note" id="chart-note"></p>
+    </div>
+    <div class="panel">
+      <h2>Volume por tipo</h2>
+      <div class="bars" id="bars-tipo"></div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="panel">
+      <h2>Volume por estado</h2>
+      <div class="bars" id="bars-uf"></div>
+    </div>
+    <div class="panel">
+      <h2>Top 10 clientes</h2>
+      <div class="tablewrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Cidade</th>
+              <th>UF</th>
+              <th>Transações</th>
+              <th>Volume</th>
+            </tr>
+          </thead>
+          <tbody id="top-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="/dashboard.js" type="module"></script>
+</body>
+</html>
