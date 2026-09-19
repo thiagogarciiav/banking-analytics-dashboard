@@ -4,10 +4,6 @@ Dashboard analítico e interativo para visualização de transações, perfil da
 
 Projeto 100% front-end, sem build, sem dependências, sem servidor. Abriu no navegador, funcionou.
 
-## Visualize o projeto
-
-
-
 ## ✨ Funcionalidades
 -  5 KPIs — clientes ativos, transações, volume transacionado, ticket médio e taxa de aprovação
 
